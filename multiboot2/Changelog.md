@@ -1,8 +1,24 @@
 # CHANGELOG for crate `multiboot2`
 
-## Unreleased
+## v0.22.0
 
--
+This release contains another major refactoring of the internals, guaranteeing
+even more sanity checks for correct behaviour and lack of UB. In this release,
+the `Builder` was rewritten and lots of corresponding UB in certain
+corer-cases removed. Further, the builder's API was streamlined.
+
+If you are interested in the internals of the major refactorings recently taken
+place, please head to the documentation of `multiboot2-common`.
+
+- **Breaking** The builder type is now just called `Builder`. This needs the
+  `builder` feature.
+- **Breaking** The framebuffer tag has been marked `unsafe` as its
+  implementation contains UB and needs rework. This originates from no longer
+  active contributors. **Contributions are welcome.** This is the last place
+  with UB that I am aware of after the recent intense and tough refactorings.
+- The trait `TagTrait` was removed and was replaced by a new `Tag` trait coming
+  from `multiboot2-common`. This only affects you if you provide custom tag
+  types for the library.
 
 ## 0.21.0 (2024-08-17)
 
@@ -11,6 +27,9 @@ unit tests pass Miri**, thus we removed lots of undefined behaviour and
 increased the memory safety! 🎉 Only a small part of these internal refactorings
 leak to the public interface. If you don't use external custom tags, you
 should be fine from any refactorings.
+
+_**Edit**: The above's statement is not true for the builder, which still
+contains UB. This is gated behind the `builder` feature._
 
 Please note that **all previous releases** must be considered unsafe, as they
 contain UB. However, it is never clear how UB results in immediate incorrect
